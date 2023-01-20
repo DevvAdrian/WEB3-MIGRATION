@@ -122,7 +122,7 @@ return (
       <Grid container justify="center" alignItems="center" style={{ marginTop : '30px'}}>
         {(!wl || !swapEnabled) ?
           <Alert  variant="filled" severity="warning" style={{marginBottom: '50px'}}>
-            YOU ARE NOT QUALIFIED
+            SWAP IS DISABLED!
           </Alert>
           :
           <Alert  variant="filled" severity="success" style={{marginBottom: '50px'}}>
