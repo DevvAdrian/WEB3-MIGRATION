@@ -299,10 +299,17 @@ export class TombFinance {
     return formatEther(swapFee);
   }
   
-  async getDecimal(): Promise<BigNumber> {
+  async getOldDecimal(): Promise<BigNumber> {
     const { old } = this.contracts;
     const decimal = await old.decimals();
     const symbol = await old.decimals();
+    return decimal;
+  }
+
+  async getNewDecimal(): Promise<BigNumber> {
+    const { origin } = this.contracts;
+    const decimal = await origin.decimals();
+    const symbol = await origin.decimals();
     return decimal;
   }
 

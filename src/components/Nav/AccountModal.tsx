@@ -1,6 +1,9 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import useTokenBalance from '../../hooks/useTokenBalance';
+import useOldDeciaml from '../../hooks/userOldDecimal';
+import useNewDeciaml from '../../hooks/userNewDecimal';
+
 import { getDisplayBalance } from '../../utils/formatBalance';
 
 import Label from '../Label';
@@ -12,12 +15,14 @@ import TokenSymbol from '../TokenSymbol';
 
 const AccountModal: React.FC<ModalProps> = ({ onDismiss }) => {
   const tombFinance = useTombFinance();
+  const oldDecimal = useOldDeciaml();
+  const newDecimal = useNewDeciaml();
 
   const tombBalance = useTokenBalance(tombFinance.NEW);
-  const displayTombBalance = useMemo(() => getDisplayBalance(tombBalance, 9, 2), [tombBalance]);
+  const displayTombBalance = useMemo(() => getDisplayBalance(tombBalance, Number(newDecimal.toString()), 2), [tombBalance]);
 
   const tshareBalance = useTokenBalance(tombFinance.OLD);
-  const displayTshareBalance = useMemo(() => getDisplayBalance(tshareBalance, 10, 2), [tshareBalance]);
+  const displayTshareBalance = useMemo(() => getDisplayBalance(tshareBalance, Number(oldDecimal.toString()), 2), [tshareBalance]);
 
   const wallet = useWallet()
 

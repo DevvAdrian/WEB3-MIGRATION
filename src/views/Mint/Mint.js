@@ -14,8 +14,10 @@ import useNewToken from '../../hooks/useNewToken';
 import useNewRatio from '../../hooks/useNewRatio';
 import useOldRatio from '../../hooks/useOldRatio';
 import useSwapEnabled from '../../hooks/useSwapEnabled';
-import useTotalMigrated from '../../hooks/useTotalMigrated';
+import useOldDeciaml from '../../hooks/userOldDecimal';
+import useNewDeciaml from '../../hooks/userNewDecimal';
 import useUserInfo from '../../hooks/useUserInfo';
+
 import useApprove, { ApprovalState } from '../../hooks/useApprove';
 
 import { getDisplayBalance } from '../../utils/formatBalance';
@@ -26,7 +28,7 @@ import HomeImage from '../../assets/img/back.jpg';
 import BnbImage from '../../assets/img/bnb.png';
 import { white, red1 } from '../../theme/colors';
 import WalletProviderModal from '../../components/WalletProviderModal';
-import useDeciaml from '../../hooks/userDecimal';
+
 import "../../index.css"
 
 const BackgroundImage = createGlobalStyle`
@@ -62,7 +64,8 @@ const Mint = () => {
   const oldName = useOldToken();
   const newName = useNewToken();
   const newRatio = useNewRatio();
-  const decimal = useDeciaml();
+  const oldDecimal = useOldDeciaml();
+  const newDecimal = useNewDeciaml();
   const oldRatio = useOldRatio();
   const swapEnabled = useSwapEnabled();
   // const totalMigrated = 0;
@@ -105,25 +108,25 @@ const Mint = () => {
     setTokenAmount(new Intl.NumberFormat("en-US", {
         maximumFractionDigits: 10,
         minimumFractionDigits: 0,
-    }).format(Number(getDisplayBalance(oldTokenBalance, decimal ? decimal.toString() : 18, 2) * oldRatio / newRatio)));
+    }).format(Number(getDisplayBalance(oldTokenBalance, oldDecimal ? oldDecimal.toString() : 18, 2) * oldRatio / newRatio)));
     setOldTokenAmount(new Intl.NumberFormat("en-US", {
       maximumFractionDigits: 10,
       minimumFractionDigits: 0,
-  }).format(Number(getDisplayBalance(oldTokenBalance, decimal ? decimal.toString() : 18, 2) )));
+  }).format(Number(getDisplayBalance(oldTokenBalance, oldDecimal ? oldDecimal.toString() : 18, 2) )));
 
   };
-  const deciamlPart = Math.pow(10, decimal ? decimal.toString() : 18);
+  const deciamlPart = Math.pow(10, oldDecimal ? oldDecimal.toString() : 18);
 return (
     <Page className="center">
       <BackgroundImage />
       <Grid container justify="center" alignItems="center" style={{ marginTop : '30px'}}>
-        {(!wl && !swapEnabled) ?
+        {(!wl || !swapEnabled) ?
           <Alert  variant="filled" severity="warning" style={{marginBottom: '50px'}}>
             YOU ARE NOT QUALIFIED
           </Alert>
           :
           <Alert  variant="filled" severity="success" style={{marginBottom: '50px'}}>
-              Upgradation to WEB3
+              Upgrade to WEB3
           </Alert>
         }
       </Grid>
@@ -141,7 +144,7 @@ return (
                             value={oldTokenAmount || ''}
                             onSelectMax={handleSelectMax}
                             onChange={handleChange}
-                            max={getDisplayBalance(oldTokenBalance, 18, 2)}
+                            max={getDisplayBalance(oldTokenBalance, Number(oldDecimal.toString()), 2)}
                             symbol={ oldName }
                             images={OldTokenImg}
                             disabled={false} 
@@ -181,7 +184,7 @@ return (
                         <Grid className='inputbox' item xs={12}>
                           <TokenInput
                             value={tokenAmount || ''}
-                            max={getDisplayBalance(newTokenBalance, 12, 2)}
+                            max={getDisplayBalance(newTokenBalance, Number(newDecimal.toString()), 2)}
                             symbol={ newName }
                             images={NewTokenImg}
                             disabled={true}
@@ -222,7 +225,7 @@ return (
             className='wallectButton'
             style={{maxWidth : '200px', width: '50%', marginBottom : '30px' }}
           >
-            { Number(tokenAmount) > Number(oldTokenBalance / deciamlPart) ? `Insufficient ${ oldName } Balance` : Number(tokenAmount) > Number(allowedamount / deciamlPart) ? "You Exceed Allowed Amount" : (swapFee > Number(bnbBalance) / 1e18) ? "Insufficient BNB Balance For Migration Fee" : (Number(tokenAmount)===0 || !tokenAmount) ? "Input Amount" :  (!wl || !swapEnabled) ? "Migration is not allowed" : "Migration"}
+            { Number(tokenAmount) > Number(oldTokenBalance / deciamlPart) ? "Insufficient { oldName } Balance" : Number(tokenAmount) > Number(allowedamount / deciamlPart) ? "You Exceed Allowed Amount" : (swapFee > Number(bnbBalance) / 1e18) ? "Insufficient BNB Balance For Migration Fee" : (Number(tokenAmount)===0 || !tokenAmount) ? "Input Amount" :  (!wl || !swapEnabled) ? "Migration is not allowed" : "Migration"}
           </Button>
         :
           <Button
