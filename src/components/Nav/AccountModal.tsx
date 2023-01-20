@@ -1,8 +1,8 @@
 import React, { useMemo } from 'react';
 import styled from 'styled-components';
 import useTokenBalance from '../../hooks/useTokenBalance';
-import useOldDeciaml from '../../hooks/userOldDecimal';
-import useNewDeciaml from '../../hooks/userNewDecimal';
+import useOldDeciaml from '../../hooks/useOldDecimal';
+import useNewDeciaml from '../../hooks/useNewDecimal';
 
 import { getDisplayBalance } from '../../utils/formatBalance';
 

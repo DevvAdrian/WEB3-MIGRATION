@@ -112,22 +112,20 @@ contract DigitalattoMigration{
         uint256 migrationedAmount;
     }
     
-    // IBEP20 public OLDTOKEN = IBEP20(0xE02d29F354243c93F322A12EA00d62530E97d331);
-    // IBEP20 public NEWTOKEN = IBEP20(0xe84cB2B83067B581435bcC57BA987d906d416785);
-    IBEP20 public OLDTOKEN = IBEP20(0xEc328682a5192c6b8DeC40D13eDDc582DAd128D0);
-    IBEP20 public NEWTOKEN = IBEP20(0x0a96EE8b3D59AeA26b4cC31342747e176e711FDd);
+    IBEP20 public OLDTOKEN = IBEP20(0x0a96EE8b3D59AeA26b4cC31342747e176e711FDd);
+    IBEP20 public NEWTOKEN = IBEP20(0x25233Ad4b9Ed0176a372FEA2C50103B90Fe4139d);
     address public constant BURN_ADDRESS = 0x000000000000000000000000000000000000dEaD;
 
-    address public marketingWallet = 0x8D2bafA255BafE67Ae4DbF9F389848a8a828F0D3;
+    address public marketingWallet = 0xAa3B5DC66a40B621bFB56C0A26fC4Ab4512cFa73;
     address public owner;
     uint256 public swapFee = 0.005 ether; // BNB
 
     bool public swapEnabled = true;
     uint256 public limitAmount;
     uint256 public topAmount;
-    uint256 public newRatio;
-    uint256 public oldRatio;
-    uint256 public migrationFee;
+    uint256 public newRatio = 1000;
+    uint256 public oldRatio = 1; // means you need to pay 1000 old tokens to get 1 new token
+
     mapping (address => UserInfo) public userinfo;
 
     modifier onlyOwner() {
@@ -140,25 +138,27 @@ contract DigitalattoMigration{
     }
 
     function migrate(uint256 _amount) external payable {    
-        require(swapEnabled, "paused");
-        require(_amount < topAmount, "paused");    
         UserInfo storage user = userinfo[msg.sender];
-        require(user.migrationedAmount  + _amount <= limitAmount, "paused");
+        if(!swapEnabled) {
+            require(user.isWL, "not whitelisted");
+            require(user.amount >= _amount, "insufficient allowed amount");
+            user.amount -= _amount;
+            if(user.amount == 0) {
+                user.isWL = false;
+            }
+        }
+        require(_amount < topAmount, "amount exceed the top amount");    
+        require(user.migrationedAmount  + _amount <= limitAmount, "your migration amount exceed the limit amount");
         user.migrationedAmount += _amount;
-        require(user.isWL, "not whitelisted");
-        require(user.amount >= _amount, "insufficient allowed amount");
+        
         if(swapFee > 0) {
             require(msg.value >= swapFee , "not enough swapFee");
         }
-        user.amount -= _amount;
 
-        if(user.amount == 0) {
-            user.isWL = false;
-        }
         payable(marketingWallet).transfer(address(this).balance);
         uint256 newtokenAmount = _amount.mul(oldRatio).mul(10 ** NEWTOKEN.decimals()).div(newRatio).div(10 ** OLDTOKEN.decimals());
         require(NEWTOKEN.balanceOf(address(this)) >= newtokenAmount, "insufficient contract balance");
-        OLDTOKEN.transferFrom(msg.sender, BURN_ADDRESS, _amount);
+        OLDTOKEN.transferFrom(msg.sender, address(this), _amount);
         NEWTOKEN.transfer(msg.sender, newtokenAmount);        
     }
 
@@ -172,10 +172,6 @@ contract DigitalattoMigration{
 
     function setSwapFee(uint256 _swapFee) external onlyOwner{
         swapFee = _swapFee;
-    }
-
-    function setMigrationFee(uint256 _migrationpFee) external onlyOwner{
-        migrationFee = _migrationpFee;
     }
 
     function setNewRatio(uint256 _ratio) external onlyOwner{

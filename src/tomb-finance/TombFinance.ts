@@ -95,50 +95,50 @@ export class TombFinance {
   //=========================IN HOME PAGE==============================
   //===================================================================
 
-  async getTombStat(): Promise<TokenStat> {
-    const supply = await this.NEW.totalSupply();
-    const tombCirculatingSupply = supply;
-    const priceInBNB = await this.getTokenPriceFromPancakeswap(this.NEW);
-    const priceOfOneBNB = await this.getWBNBPriceFromPancakeswap();
-    const priceOfTombInDollars = (Number(priceInBNB) * Number(priceOfOneBNB)).toFixed(18);
+  // async getTombStat(): Promise<TokenStat> {
+  //   const supply = await this.NEW.totalSupply();
+  //   const tombCirculatingSupply = supply;
+  //   const priceInBNB = await this.getTokenPriceFromPancakeswap(this.NEW);
+  //   const priceOfOneBNB = await this.getWBNBPriceFromPancakeswap();
+  //   const priceOfTombInDollars = (Number(priceInBNB) * Number(priceOfOneBNB)).toFixed(18);
 
-    return {
-      tokenInFtm: priceInBNB,
-      priceInDollars: priceOfTombInDollars,
-      totalSupply: getDisplayBalance(supply, this.NEW.decimal, 0),
-      circulatingSupply: getDisplayBalance(tombCirculatingSupply, this.NEW.decimal, 0),
-    };
-  }
+  //   return {
+  //     tokenInFtm: priceInBNB,
+  //     priceInDollars: priceOfTombInDollars,
+  //     totalSupply: getDisplayBalance(supply, this.NEW.decimal, 0),
+  //     circulatingSupply: getDisplayBalance(tombCirculatingSupply, this.NEW.decimal, 0),
+  //   };
+  // }
 
   /**
    * Calculates various stats for the requested LP
    * @param name of the LP token to load stats for
    * @returns
-   */
-  async getLPStat(name: string): Promise<LPStat> {
-    const lpToken = this.externalTokens[name];
-    const lpTokenSupplyBN = await lpToken.totalSupply();
-    const lpTokenSupply = getDisplayBalance(lpTokenSupplyBN, 18);
-    const token0 = name.startsWith('NEW') ? this.NEW : this.OLD;
-    const isTomb = name.startsWith('NEW');
-    const tokenAmountBN = await token0.balanceOf(lpToken.address);
-    const tokenAmount = getDisplayBalance(tokenAmountBN, 18);
+  //  */
+  // async getLPStat(name: string): Promise<LPStat> {
+  //   const lpToken = this.externalTokens[name];
+  //   const lpTokenSupplyBN = await lpToken.totalSupply();
+  //   const lpTokenSupply = getDisplayBalance(lpTokenSupplyBN, 18);
+  //   const token0 = name.startsWith('NEW') ? this.NEW : this.OLD;
+  //   const isTomb = name.startsWith('NEW');
+  //   const tokenAmountBN = await token0.balanceOf(lpToken.address);
+  //   const tokenAmount = getDisplayBalance(tokenAmountBN, 18);
 
-    const ftmAmountBN = await this.BNB.balanceOf(lpToken.address);
-    const ftmAmount = getDisplayBalance(ftmAmountBN, 18);
-    const tokenAmountInOneLP = Number(tokenAmount) / Number(lpTokenSupply);
-    const ftmAmountInOneLP = Number(ftmAmount) / Number(lpTokenSupply);
-    const lpTokenPrice = await this.getLPTokenPrice(lpToken, token0, isTomb);
-    const lpTokenPriceFixed = Number(lpTokenPrice).toFixed(18).toString();
-    const liquidity = (Number(lpTokenSupply) * Number(lpTokenPrice)).toFixed(2).toString();
-    return {
-      tokenAmount: tokenAmountInOneLP.toString(),
-      ftmAmount: ftmAmountInOneLP.toString(),
-      priceOfOne: lpTokenPriceFixed,
-      totalLiquidity: liquidity,
-      totalSupply: Number(lpTokenSupply).toFixed(2).toString(),
-    };
-  }
+  //   const ftmAmountBN = await this.BNB.balanceOf(lpToken.address);
+  //   const ftmAmount = getDisplayBalance(ftmAmountBN, 18);
+  //   const tokenAmountInOneLP = Number(tokenAmount) / Number(lpTokenSupply);
+  //   const ftmAmountInOneLP = Number(ftmAmount) / Number(lpTokenSupply);
+  //   const lpTokenPrice = await this.getLPTokenPrice(lpToken, token0, isTomb);
+  //   const lpTokenPriceFixed = Number(lpTokenPrice).toFixed(18).toString();
+  //   const liquidity = (Number(lpTokenSupply) * Number(lpTokenPrice)).toFixed(2).toString();
+  //   return {
+  //     tokenAmount: tokenAmountInOneLP.toString(),
+  //     ftmAmount: ftmAmountInOneLP.toString(),
+  //     priceOfOne: lpTokenPriceFixed,
+  //     totalLiquidity: liquidity,
+  //     totalSupply: Number(lpTokenSupply).toFixed(2).toString(),
+  //   };
+  // }
 
   /**
    * @returns TokenStat for OLD
@@ -166,17 +166,17 @@ export class TombFinance {
    * @param isTomb sanity check for usage of tomb token or tShare
    * @returns price of the LP token
    */
-  async getLPTokenPrice(lpToken: ERC20, token: ERC20, isTomb: boolean): Promise<string> {
-    const totalSupply = await lpToken.totalSupply();
-    //Get amount of tokenA
-    const tokenSupply = await token.balanceOf(lpToken.address);
-    const stat = isTomb === true ? await this.getTombStat() : await this.getShareStat();
-    const priceOfToken = stat.priceInDollars;
-    const tokenInLP = Number(tokenSupply) / Number(totalSupply) / Math.pow(10, token.decimal) * Math.pow(10, lpToken.decimal);
-    const tokenPrice = (Number(priceOfToken) * tokenInLP * 2) //We multiply by 2 since half the price of the lp token is the price of each piece of the pair. So twice gives the total
-      .toString();
-    return tokenPrice;
-  }
+  // async getLPTokenPrice(lpToken: ERC20, token: ERC20, isTomb: boolean): Promise<string> {
+  //   const totalSupply = await lpToken.totalSupply();
+  //   //Get amount of tokenA
+  //   const tokenSupply = await token.balanceOf(lpToken.address);
+  //   const stat = isTomb === true ? await this.getTombStat() : await this.getShareStat();
+  //   const priceOfToken = stat.priceInDollars;
+  //   const tokenInLP = Number(tokenSupply) / Number(totalSupply) / Math.pow(10, token.decimal) * Math.pow(10, lpToken.decimal);
+  //   const tokenPrice = (Number(priceOfToken) * tokenInLP * 2) //We multiply by 2 since half the price of the lp token is the price of each piece of the pair. So twice gives the total
+  //     .toString();
+  //   return tokenPrice;
+  // }
 
 
   async getTokenPriceFromPancakeswap(tokenContract: ERC20): Promise<string> {

@@ -11,7 +11,7 @@ const useTombStats = () => {
   useEffect(() => {
     async function fetchTombPrice(){
       try {
-        setStat(await tombFinance.getTombStat());
+        // setStat(await tombFinance.getTombStat());
       }
       catch(err){
         console.error(err)
