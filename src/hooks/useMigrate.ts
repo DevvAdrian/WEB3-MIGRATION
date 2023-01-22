@@ -12,7 +12,7 @@ const useMigrate = () => {
     (oldAmount: string) => {
       handleTransactionReceipt(
         tombFinance.migrate(oldAmount),
-        `Migrate ${oldAmount} Old DGTL To New Ones `,
+        `Migrate ${oldAmount} DGTL To WEB3.0 `,
       );
     },
     [tombFinance, handleTransactionReceipt],
