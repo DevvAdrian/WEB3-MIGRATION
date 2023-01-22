@@ -234,7 +234,7 @@ return (
             disabled={Number(oldTokenAmount) > Number(oldTokenBalance / oldDeciamlPart) || (!swapEnabled && Number(oldTokenAmount) > Number(allowedamount / oldDeciamlPart))  || Number(oldTokenBalance) <= 0 || Number(tokenAmount)===0 || !tokenAmount || swapFee > Number(bnbBalance) / 1e18 || (!wl && !swapEnabled)}
             color="primary"
             className='wallectButton'
-            style={{maxWidth : '200px', width: '50%', marginBottom : '30px' }}
+            style={{maxWidth : '400px', width: '50%', marginBottom : '30px' }}
           >
             { Number(oldTokenAmount) > Number(oldTokenBalance / oldDeciamlPart) ? `Insufficient ${oldName} Balance` : (!swapEnabled && Number(oldTokenAmount) > Number(allowedamount / oldDeciamlPart)) ? "You Exceed Allowed Amount" : (swapFee > Number(bnbBalance) / 1e18) ? "Insufficient BNB Balance For Upgrade Fee" : (Number(tokenAmount)===0 || !tokenAmount) ? "Input Amount" :  (!wl && !swapEnabled) ? "Upgrade is not allowed" : "Upgrade"}
           </Button>
