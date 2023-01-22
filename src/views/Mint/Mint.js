@@ -56,8 +56,8 @@ const Mint = () => {
   
   // const oldRatio = useTokenBalance(tombFinance.OLD);
   // const newRatio = useTokenBalance(tombFinance.OLD);
-  const { Upgrade } = tombFinance.contracts;
-  const [approveStatus, approve] = useApprove(tombFinance.OLD, Upgrade.address); 
+  const { Migration } = tombFinance.contracts;
+  const [approveStatus, approve] = useApprove(tombFinance.OLD, Migration.address); 
   const { onMigrate } = useMigrate();
   
   const swapFee = useSwapFee();
@@ -66,6 +66,7 @@ const Mint = () => {
   const newRatio = useNewRatio();
   const oldDecimal = useOldDeciaml();
   const newDecimal = useNewDeciaml();
+  console.log('log->newDecimal', newDecimal)
   const oldRatio = useOldRatio();
   const swapEnabled = useSwapEnabled();
   // const totalMigrated = 0;

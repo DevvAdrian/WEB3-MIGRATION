@@ -11,7 +11,7 @@ const useDeciaml = () => {
   useEffect(() => {
     async function fetchDecimal() {
       try {
-        setDecimal(await tombFinance.getOldDecimal());
+        setDecimal(await tombFinance.getNewDecimal());
       } catch(err) {
         console.error(err);
       }
