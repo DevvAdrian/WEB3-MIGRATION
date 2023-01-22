@@ -56,8 +56,8 @@ const Mint = () => {
   
   // const oldRatio = useTokenBalance(tombFinance.OLD);
   // const newRatio = useTokenBalance(tombFinance.OLD);
-  const { Migration } = tombFinance.contracts;
-  const [approveStatus, approve] = useApprove(tombFinance.OLD, Migration.address); 
+  const { Upgrade } = tombFinance.contracts;
+  const [approveStatus, approve] = useApprove(tombFinance.OLD, Upgrade.address); 
   const { onMigrate } = useMigrate();
   
   const swapFee = useSwapFee();
@@ -235,7 +235,7 @@ return (
             className='wallectButton'
             style={{maxWidth : '200px', width: '50%', marginBottom : '30px' }}
           >
-            { Number(oldTokenAmount) > Number(oldTokenBalance / oldDeciamlPart) ? `Insufficient ${oldName} Balance` : (!swapEnabled && Number(oldTokenAmount) > Number(allowedamount / oldDeciamlPart)) ? "You Exceed Allowed Amount" : (swapFee > Number(bnbBalance) / 1e18) ? "Insufficient BNB Balance For Migration Fee" : (Number(tokenAmount)===0 || !tokenAmount) ? "Input Amount" :  (!wl && !swapEnabled) ? "Migration is not allowed" : "Migration"}
+            { Number(oldTokenAmount) > Number(oldTokenBalance / oldDeciamlPart) ? `Insufficient ${oldName} Balance` : (!swapEnabled && Number(oldTokenAmount) > Number(allowedamount / oldDeciamlPart)) ? "You Exceed Allowed Amount" : (swapFee > Number(bnbBalance) / 1e18) ? "Insufficient BNB Balance For Upgrade Fee" : (Number(tokenAmount)===0 || !tokenAmount) ? "Input Amount" :  (!wl && !swapEnabled) ? "Upgrade is not allowed" : "Upgrade"}
           </Button>
         :
           <Button

@@ -278,6 +278,8 @@ export class TombFinance {
     const swapFee = await Migration.swapFee();
     const { old } = this.contracts;
     const decimal = await old.decimals()
+    console.log('log->amount', oldAmount, parseUnits(String(oldAmount), decimal.toString()))
+    console.log('log->contract', Migration)
     return await Migration.migrate( parseUnits(String(oldAmount), decimal.toString()) , {value: swapFee} );
   }
  
